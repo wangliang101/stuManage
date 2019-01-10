@@ -1,0 +1,169 @@
+{% extends "layout.html" %}
+
+{% block css %}
+    <style>
+        .hide{
+            display: none;
+        }
+        .shadow{
+            position: fixed;
+            left: 0;
+            top:0;
+            right:0;
+            bottom:0;
+            background-color: black;
+            opacity: 0.4;
+            z-index: 999;
+        }
+        .modal{
+            position: fixed;
+            left: 50%;
+            top:50%;
+            background-color: white;
+            width:400px;
+            height: 300px;
+            z-index: 1000;
+            margin-left: -200px;
+            margin-top:-150px;
+        }
+    </style>
+{% endblock %}
+
+
+
+{% block content %}
+    <ol class="breadcrumb">
+      <li><a href="#">首页</a></li> >>
+      <li class="active">班级管理</li>
+    </ol>
+    <div style="width: 700px;margin: 150px auto 0">
+        <div style="margin: 10px 0">
+            <a class="btn btn-primary" href="/add_class/">添加</a>
+            <a class="btn btn-success" onclick="showModal()" >对话框添加</a>
+        </div>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>班级名称</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in class_list %}
+                        <tr>
+                            <td>{{ row.id }}</td>
+                            <td>{{ row.title }}</td>
+                            <td>
+                                <a href="/del_class/?nid={{ row.id }}"><i class="icon-remove"></i></a>
+                                |
+                                <a href="/edit_class/?title={{ row.title }}&nid={{ row.id }}"><i class="icon-pencil"></i></a>
+                                |
+                                <a onclick="showEditModal(this)"> <i class="fa fa-cog fa-spin"></i></a>
+                            </td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="shadow" class="shadow hide"></div>
+    <div id="modal" class="modal hide">
+        <h1>添加班级</h1>
+            <p>班级名称：<input id="class_title" type="text" name="title"></p>
+            <input type="button" value="提交" onclick="sendAjax()">
+            <input type="button" value="取消" onclick="hideModal()"><span id="errorMsg"></span>
+    </div>
+
+    <div id="editModal" class="modal hide">
+        <h1>编辑班级</h1>
+            <input id="editId" type="text" style="display: none"  name="editClassId">
+            <p>班级名称：<input id="editTitle" type="text" name="editClassTitle"></p>
+            <input type="button" value="提交" onclick="sendEditAjax()">
+            <input type="button" value="取消" onclick="hideEditModal()"><span></span>
+    </div>
+
+    <div class="pagination">
+      <ul>
+        <li>
+          <a href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li>
+          <a href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+{% endblock %}
+
+
+
+{% block js %}
+    <script src="/static/jquery-1.12.4.js"></script>
+<script>
+    function showModal() {
+        document.getElementById("shadow").classList.remove('hide')
+        document.getElementById("modal").classList.remove('hide')
+    }
+    function hideModal() {
+        document.getElementById("shadow").classList.add('hide')
+        document.getElementById("modal").classList.add('hide')
+    }
+    function hideEditModal() {
+        document.getElementById("shadow").classList.add('hide')
+        document.getElementById("editModal").classList.add('hide')
+    }
+    function sendAjax() {
+        $.ajax({
+            url:"/add_class/",
+            type:"POST",
+            data:{'class_title':$('#class_title').val()},
+            success:function (data) {
+                if(data == "ok"){
+                    location.href='/classes/'
+                }else{
+                    $('#errorMsg').text(data)
+                }
+
+            }
+        })
+    }
+    function showEditModal(ths) {
+        document.getElementById("shadow").classList.remove('hide')
+        document.getElementById("editModal").classList.remove('hide')
+        var row = $(ths).parent().prevAll()
+        var content = $(row[0]).text()
+        var contentId = $(row[1]).text()
+        $('#editId').val(contentId)
+        $('#editTitle').val(content)
+    }
+
+    function sendEditAjax() {
+        var editClassId = $('#editId').val();
+        var editClassTitle = $('#editTitle').val();
+        $.ajax({
+            url:"/edit_modal_class/",
+            type:'POST',
+            data:{'editClassId':editClassId,'editClassTitle':editClassTitle},
+            success:function (args) {
+                args = JSON.parse(args)
+                if (args.status){
+                    location.reload()
+                }else{
+                    alert(args.message)
+                }
+            }
+
+        }
+        )
+    }
+</script>
+{% endblock %}

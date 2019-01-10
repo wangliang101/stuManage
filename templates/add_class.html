@@ -1,0 +1,42 @@
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#</head>#}
+{#<body>#}
+{#    <h1>添加班级</h1>#}
+{#    <form method="POST" action="/add_class/">#}
+{#        <p>班级名称：<input type="text" name="title"></p>#}
+{#        <input type="submit" value="提交">#}
+{#    </form>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+{% extends "layout.html" %}
+{% block css %}
+  <style>
+    form{
+        margin-top: 180px;
+        margin-left:450px;
+    }
+  </style>
+{% endblock  %}
+
+{% block content %}
+    <ol class="breadcrumb">
+      <li><a href="#">首页</a></li> >>
+      <li><a href="/classes/">班级管理</a></li> >>
+      <li class="active">添加班级</li>
+    </ol>
+    <form class="form-horizontal" method="POST" action="/add_class/">
+    <p></p>
+        <div class="form-group">
+            班级名称:<input type="text" name="title">
+            </select>
+        </div>
+    <p></p>
+    <input class="btn btn-default" type="submit" value="提交">
+    </form>
+{% endblock %}

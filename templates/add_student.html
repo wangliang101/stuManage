@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+{% block css %}
+  <style>
+    form{
+        margin-top: 180px;
+        margin-left:450px;
+    }
+  </style>
+{% endblock  %}
+
+{% block content %}
+    <ol class="breadcrumb">
+      <li><a href="#">首页</a></li> >>
+      <li><a href="/student/">学生管理</a></li> >>
+      <li class="active">添加学生</li>
+    </ol>
+    <form class="form-horizontal"  method="POST" action="/add_student/">
+        <div class="form-group">
+            学生姓名: <input type="text" name="s_name">
+        </div>
+    <p></p>
+        <div class="form-group">
+            班级名称:
+            <select name="class_id">
+                {% for row in class_list %}
+                    <option value="{{ row.id }}">{{ row.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    <p></p>
+    <input class="btn btn-default" type="submit" value="提交">
+    </form>
+{% endblock %}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#</head>#}
+{#<body>#}
+{#    <h1>添加学生</h1>#}
+{#    <form method="POST" action="/add_student/">#}
+{#        <p>学生姓名:<input type="text" name="s_name"></p>#}
+{#        <p>#}
+{#            班级名称：#}
+{#            <select name="class_id">#}
+{#                {% for row in class_list %}#}
+{#                    <option value="{{ row.id }}">{{ row.title }}</option>#}
+{#                {% endfor %}#}
+{#            </select>#}
+{#        </p>#}
+{#        <input type="submit" value="提交">#}
+{#    </form>#}
+{##}
+{#</body>#}
+{#</html>#}
